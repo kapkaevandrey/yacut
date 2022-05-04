@@ -45,7 +45,7 @@
               {% with messages = get_flashed_messages() %}
                 {% if messages %}
                   {% for message in messages %}
-                    {{ message }}
+                    <span style="color:red">{{ message }}</span>
                   {% endfor %}
                 {% endif %}
               {% endwith %}
@@ -56,7 +56,24 @@
         </div>
       </div>
       {% if url_map %}
-        {% include "info_message.html" %}
+        <div class="container">
+          <div class="row ">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+              <p class="text-center">
+                <h5 class="text-center">Ваша новая ссылка готова</h5>
+              </p>
+              <p class="text-center">
+                <a href="{{ url_for('short_id_view', custom_id=url_map.short, _external=True) }}" class="text-center">
+                  <b>{{ url_for('short_id_view', custom_id=url_map.short, _external=True) }}</b>
+                </a>
+              </p>
+            </div>
+            <div class="col-sm">
+            </div>
+          </div>
+        </div>
       {% endif %}
     </section>
   </main>

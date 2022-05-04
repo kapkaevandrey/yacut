@@ -10,4 +10,4 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from . import views, error_handlers
+from . import api_views, views, error_handlers

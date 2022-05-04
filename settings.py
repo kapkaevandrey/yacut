@@ -1,10 +1,13 @@
 import os
 import string
 
+DEFAULT_LENGTH_LINK = 6
 LINK_SYMBOLS = (string.ascii_uppercase +
                 string.ascii_lowercase +
                 string.digits)
-DEFAULT_LENGTH_LINK = 6
+LINK_MATCHING_PATTERN = r'^[A-Za-z1-9]+$'
+MAX_LENGTH_LINK = 16
+MAX_LENGTH_URL = 2048
 
 
 class Config:

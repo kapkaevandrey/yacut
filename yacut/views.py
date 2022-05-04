@@ -1,6 +1,6 @@
 import random
 
-from flask import render_template, url_for, redirect, flash, abort
+from flask import render_template, redirect, flash, abort
 
 from .forms import UrlMapForm
 from . import app, db
@@ -14,9 +14,9 @@ def index_view():
     if form.validate_on_submit():
         short_url = form.custom_id.data
         if URL_map.query.filter_by(short=short_url).first() is not None:
-            flash('Эта ссылка уже занята', 'validation')
+            flash('Имя py уже занято!', 'validation')
             return render_template('get_short_url.html', form=form)
-        short_url = get_unique_short_id() if not short_url else short_url
+        short_url = URL_map.get_unique_short_id() if not short_url else short_url
         url_map = URL_map(
             original=form.original_link.data,
             short=short_url
@@ -31,14 +31,16 @@ def index_view():
     return render_template('get_short_url.html', form=form)
 
 
-# @app.route('/<string:custom_id>', methods=['GET'])
-# def short_id_view(custom_id):
-#     url_map = 1
-#     return "Типа того"
+@app.route('/<string:custom_id>', methods=['GET'])
+def short_id_view(custom_id):
+    url_map = URL_map.query.filter_by(short=custom_id).first()
+    if url_map is None:
+        abort(404)
+    return redirect(url_map.original)
 
 
 def get_unique_short_id(length=DEFAULT_LENGTH_LINK):
-    short_link = random.choices(LINK_SYMBOLS, k=DEFAULT_LENGTH_LINK)
+    short_link = ''.join(random.choices(LINK_SYMBOLS, k=DEFAULT_LENGTH_LINK))
     if URL_map.query.filter_by(short=short_link).first() is None:
         return short_link
     return get_unique_short_id(length=length)
