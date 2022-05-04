@@ -1,8 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import URLField, StringField, SubmitField
-from wtforms.validators import (
-    Length, DataRequired, Optional, Regexp, URL,
-)
+from wtforms import StringField, SubmitField, URLField
+from wtforms.validators import URL, DataRequired, Length, Optional, Regexp
 from settings import LINK_MATCHING_PATTERN, MAX_LENGTH_LINK, MAX_LENGTH_URL
 
 

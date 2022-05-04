@@ -1,12 +1,11 @@
-from datetime import datetime
-import re
 import random
+import re
+from datetime import datetime
+
+from settings import (DEFAULT_LENGTH_LINK, LINK_MATCHING_PATTERN, LINK_SYMBOLS,
+                      MAX_LENGTH_LINK)
 
 from . import db
-from settings import (
-    DEFAULT_LENGTH_LINK, MAX_LENGTH_LINK, LINK_MATCHING_PATTERN,
-    LINK_SYMBOLS,
-)
 
 
 class URL_map(db.Model):

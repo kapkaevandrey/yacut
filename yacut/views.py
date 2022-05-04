@@ -1,11 +1,11 @@
 import random
 
-from flask import render_template, redirect, flash, abort
-
-from .forms import UrlMapForm
-from . import app, db
-from .models import URL_map
+from flask import abort, flash, redirect, render_template
 from settings import DEFAULT_LENGTH_LINK, LINK_SYMBOLS
+
+from . import app, db
+from .forms import UrlMapForm
+from .models import URL_map
 
 
 @app.route('/', methods=['GET', 'POST'])
