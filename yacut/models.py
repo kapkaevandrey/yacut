@@ -2,8 +2,10 @@ import random
 import re
 from datetime import datetime
 
-from settings import (DEFAULT_LENGTH_LINK, LINK_MATCHING_PATTERN, LINK_SYMBOLS,
-                      MAX_LENGTH_LINK)
+from settings import (
+    DEFAULT_LENGTH_LINK, LINK_MATCHING_PATTERN,
+    LINK_SYMBOLS, MAX_LENGTH_LINK,
+)
 
 from . import db
 
@@ -13,12 +15,6 @@ class URL_map(db.Model):
     original = db.Column(db.String(2048), nullable=False)
     short = db.Column(db.String(MAX_LENGTH_LINK), nullable=False, unique=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.now())
-
-    def to_dict(self):
-        return dict(
-            url=self.original,
-            short_link=self.short
-        )
 
     def from_dict(self, data):
         self.original = data['url']
@@ -35,7 +31,9 @@ class URL_map(db.Model):
 
     @classmethod
     def get_unique_short_id(cls, length=DEFAULT_LENGTH_LINK):
-        short_link = ''.join(random.choices(LINK_SYMBOLS, k=DEFAULT_LENGTH_LINK))
+        short_link = ''.join(
+            random.choices(LINK_SYMBOLS, k=DEFAULT_LENGTH_LINK)
+        )
         if cls.query.filter_by(short=short_link).first() is None:
             return short_link
         return cls.get_unique_short_id(length=length)

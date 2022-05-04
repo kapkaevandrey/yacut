@@ -39,6 +39,9 @@ def add_short_link():
     db.session.commit()
     return jsonify(
         {'url': url_map.original,
-         'short_link': url_for('short_id_view', custom_id=url_map.short, _external=True)
-         }
+         'short_link': url_for(
+             'short_id_view',
+             custom_id=url_map.short,
+             _external=True
+         )}
     ), 201
