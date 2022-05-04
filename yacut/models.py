@@ -27,8 +27,8 @@ class URL_map(db.Model):
 
     @classmethod
     def is_valid_short_id(cls, short_id: str):
-        if not (len(short_id) <= MAX_LENGTH_LINK
-                and re.match(LINK_MATCHING_PATTERN, short_id)):
+        if not (len(short_id) <= MAX_LENGTH_LINK and
+                re.match(LINK_MATCHING_PATTERN, short_id)):
             return False, 'Указано недопустимое имя для короткой ссылки'
         if cls.query.filter_by(short=short_id).first() is not None:
             return False, f'Имя "{short_id}" уже занято.'

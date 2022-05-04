@@ -2,7 +2,7 @@ from flask import jsonify, request, url_for
 
 from . import app, db
 from .models import URL_map
-from .error_handlers import InvalidAPIUsage
+from .error_handlers import InvalidAPIUsageError
 
 
 @app.route('/api/id', methods=['POST'])
@@ -14,7 +14,7 @@ def create_short_link():
 def get_origin_url(short_id):
     url_map = URL_map.query.filter_by(short=short_id).first()
     if url_map is None:
-        raise InvalidAPIUsage('Указанный id не найден', 404)
+        raise InvalidAPIUsageError('Указанный id не найден', 404)
     return jsonify({'url': url_map.original}), 200
 
 
@@ -22,13 +22,13 @@ def get_origin_url(short_id):
 def add_short_link():
     data = request.get_json()
     if data is None:
-        raise InvalidAPIUsage('Отсутствует тело запроса')
+        raise InvalidAPIUsageError('Отсутствует тело запроса')
     if 'url' not in data:
-        raise InvalidAPIUsage('"url" является обязательным полем!')
+        raise InvalidAPIUsageError('"url" является обязательным полем!')
     if 'custom_id' in data and data['custom_id']:
         is_valid, message = URL_map.is_valid_short_id(data['custom_id'])
         if not is_valid:
-            raise InvalidAPIUsage(
+            raise InvalidAPIUsageError(
                 message
             )
     else:

@@ -28,4 +28,3 @@ class UrlMapForm(FlaskForm):
         ]
     )
     submit = SubmitField('Создать')
-
