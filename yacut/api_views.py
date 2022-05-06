@@ -17,23 +17,17 @@ def get_origin_url(short_id):
     return jsonify({'url': url_map.original}), HTTPStatus.OK
 
 
-@app.route('/api/id/', methods=['POST'])  #TODO замена аналаиз на броски исключений из валидирующего метода
+@app.route('/api/id/', methods=['POST'])
 def add_short_link():
     data = request.get_json()
     if data is None:
         raise InvalidAPIUsageError('Отсутствует тело запроса')
     if 'url' not in data:
         raise InvalidAPIUsageError('"url" является обязательным полем!')
-    #####################################################################
     if 'custom_id' in data and data['custom_id']:
-        is_valid, message = URL_map.is_valid_short_id(data['custom_id'])
-        if not is_valid:
-            raise InvalidAPIUsageError(
-                message
-            )
+        URL_map.is_valid_short_id(data['custom_id'], exception=True)
     else:
         data['custom_id'] = URL_map.get_unique_short_id()
-    ######################################################################
     url_map = URL_map()
     url_map.from_dict(data)
     db.session.add(url_map)

@@ -1,19 +1,18 @@
 import random
-import re
 from datetime import datetime
 
 from settings import (
-    DEFAULT_LENGTH_LINK, LINK_MATCHING_PATTERN,
-    LINK_SYMBOLS, MAX_LENGTH_LINK,
+    DEFAULT_LENGTH_SHORT_PATH, PATH_MATCHING_PATTERN,
+    PATH_SYMBOLS, MAX_LENGTH_SHORT_PATH, MAX_LENGTH_URL
 )
-
 from . import db
+from .error_handlers import InvalidAPIUsageError
 
 
 class URL_map(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    original = db.Column(db.String(2048), nullable=False)
-    short = db.Column(db.String(MAX_LENGTH_LINK), nullable=False, unique=True)
+    original = db.Column(db.String(MAX_LENGTH_URL), nullable=False)
+    short = db.Column(db.String(MAX_LENGTH_SHORT_PATH), nullable=False, unique=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.now())
 
     def from_dict(self, data):
@@ -21,19 +20,37 @@ class URL_map(db.Model):
         self.short = data['custom_id']
 
     @classmethod
-    def is_valid_short_id(cls, short_id: str):
-        if not (len(short_id) <= MAX_LENGTH_LINK and
-                re.match(LINK_MATCHING_PATTERN, short_id)):
-            return False, 'Указано недопустимое имя для короткой ссылки'
-        if cls.query.filter_by(short=short_id).first() is not None:
-            return False, f'Имя "{short_id}" уже занято.'
-        return True, ""
+    def is_valid_short_id(
+            cls, short_id: str,
+            rules='re in max',
+            exception=False
+    ):
+        if 'max' in rules and len(short_id) > MAX_LENGTH_SHORT_PATH:
+            if exception:
+                raise InvalidAPIUsageError(
+                    f'Указано недопустимое имя для короткой ссылки'
+                )
+            return False
+        if 're' in rules and not PATH_MATCHING_PATTERN.match(short_id):
+            if exception:
+                raise InvalidAPIUsageError(
+                    f'Указано недопустимое имя для короткой ссылки'
+                )
+            return False
+        if ('in' in rules and
+                cls.query.filter_by(short=short_id).first() is not None):
+            if exception:
+                raise InvalidAPIUsageError(f'Имя "{short_id}" уже занято.')
+            return False
+        return True
 
     @classmethod
-    def get_unique_short_id(cls, length=DEFAULT_LENGTH_LINK):
+    def get_unique_short_id(cls):
         short_link = ''.join(
-            random.choices(LINK_SYMBOLS, k=DEFAULT_LENGTH_LINK)
+            random.choices(PATH_SYMBOLS, k=DEFAULT_LENGTH_SHORT_PATH)
         )
-        if cls.query.filter_by(short=short_link).first() is None:
-            return short_link
-        return cls.get_unique_short_id(length=length)
+        while not URL_map.is_valid_short_id(short_link, "in"):
+            short_link = ''.join(
+                random.choices(PATH_SYMBOLS, k=DEFAULT_LENGTH_SHORT_PATH)
+            )
+        return short_link
