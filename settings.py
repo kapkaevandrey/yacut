@@ -5,9 +5,9 @@ import re
 DEFAULT_LENGTH = 6
 LINK_SYMBOLS = (string.ascii_uppercase +
                 string.ascii_lowercase +
-                string.digits + '\]\[')
+                string.digits)
 LINK_MATCHING_PATTERN = re.compile(rf'^[{LINK_SYMBOLS}]+$')
-MAX_LENGTH_LINK = 16
+MAX_LENGTH_SHORT_URL = 16
 MAX_LENGTH_URL = 2048
 
 

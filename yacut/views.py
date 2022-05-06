@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from flask import abort, flash, redirect, render_template
 
 from . import app, db
@@ -12,7 +14,7 @@ def index_view():
         return render_template('index_short_url.html', form=form)
     short_url = form.custom_id.data
     if (short_url and
-        URL_map.query.filter_by(short=short_url).first() is not None):
+            URL_map.query.filter_by(short=short_url).first() is not None):
         flash(f'Имя {short_url} уже занято!', 'validation')
         return render_template('index_short_url.html', form=form)
     short_url = URL_map.get_unique_short_id() if not short_url else short_url
@@ -26,5 +28,5 @@ def index_view():
 def short_id_view(custom_id):
     url_map = URL_map.query.filter_by(short=custom_id).first()
     if url_map is None:
-        abort(404)
+        abort(HTTPStatus.NOT_FOUND)
     return redirect(url_map.original)

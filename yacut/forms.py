@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, URLField
 from wtforms.validators import URL, DataRequired, Length, Optional, Regexp
 
-from settings import LINK_MATCHING_PATTERN, MAX_LENGTH_LINK, MAX_LENGTH_URL
+from settings import LINK_MATCHING_PATTERN, MAX_LENGTH_SHORT_URL, MAX_LENGTH_URL
 
 
 class UrlMapForm(FlaskForm):
@@ -19,8 +19,8 @@ class UrlMapForm(FlaskForm):
         validators=[
             Length(
                 1,
-                MAX_LENGTH_LINK,
-                message='Длинна сслыки не должна превышать 16 символов'
+                MAX_LENGTH_SHORT_URL,
+                message='Длинна ссылки не должна превышать 16 символов'
             ),
             Regexp(
                 LINK_MATCHING_PATTERN,
