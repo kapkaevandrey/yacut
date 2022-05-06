@@ -1,5 +1,3 @@
-from http import HTTPStatus
-
 from flask import jsonify, request, url_for
 
 from . import app, db
@@ -7,14 +5,17 @@ from .error_handlers import InvalidAPIUsageError
 from .models import URL_map
 
 
+@app.route('/api/id', methods=['POST'])
+def create_short_link():
+    return
+
+
 @app.route('/api/id/<string:short_id>/', methods=['GET'])
 def get_origin_url(short_id):
     url_map = URL_map.query.filter_by(short=short_id).first()
     if url_map is None:
-        raise InvalidAPIUsageError(
-            'Указанный id не найден', HTTPStatus.NOT_FOUND
-        )
-    return jsonify({'url': url_map.original}), HTTPStatus.OK
+        raise InvalidAPIUsageError('Указанный id не найден', 404)
+    return jsonify({'url': url_map.original}), 200
 
 
 @app.route('/api/id/', methods=['POST'])
@@ -25,10 +26,11 @@ def add_short_link():
     if 'url' not in data:
         raise InvalidAPIUsageError('"url" является обязательным полем!')
     if 'custom_id' in data and data['custom_id']:
-        URL_map.is_valid_short_id(data['custom_id'], 're max in', exception=True)
-        # if not URL_map.is_valid_short_id(data['custom_id'], 'in'):
-        #     raise InvalidAPIUsageError(f'Имя "py" уже занято.')
-
+        is_valid, message = URL_map.is_valid_short_id(data['custom_id'])
+        if not is_valid:
+            raise InvalidAPIUsageError(
+                message
+            )
     else:
         data['custom_id'] = URL_map.get_unique_short_id()
     url_map = URL_map()
@@ -42,4 +44,4 @@ def add_short_link():
              custom_id=url_map.short,
              _external=True
          )}
-    ), HTTPStatus.CREATED
+    ), 201

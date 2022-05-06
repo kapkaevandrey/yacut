@@ -1,27 +1,22 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, URLField
 from wtforms.validators import URL, DataRequired, Length, Optional, Regexp
-
-from settings import LINK_MATCHING_PATTERN, MAX_LENGTH_SHORT_URL, MAX_LENGTH_URL
+from settings import LINK_MATCHING_PATTERN, MAX_LENGTH_LINK, MAX_LENGTH_URL
 
 
 class UrlMapForm(FlaskForm):
-    original = URLField(
+    original_link = URLField(
         'Ссылка для сокращения',
         validators=[
             DataRequired(message='Обязательное поле'),
-            Length(1, MAX_LENGTH_URL, message='Недопустимая длинна ссылки'),
+            Length(2, MAX_LENGTH_URL),
             URL(message='Не корректный адрес'),
         ]
     )
     custom_id = StringField(
         'Ваш вариант короткой ссылки',
         validators=[
-            Length(
-                1,
-                MAX_LENGTH_SHORT_URL,
-                message='Длинна ссылки не должна превышать 16 символов'
-            ),
+            Length(1, MAX_LENGTH_LINK),
             Regexp(
                 LINK_MATCHING_PATTERN,
                 message='Ссылка должна содержать только цифры и'
