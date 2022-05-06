@@ -15,7 +15,7 @@ def index_view():
     short_url = form.custom_id.data
     if (short_url and
             URL_map.query.filter_by(short=short_url).first() is not None):
-        flash(f'Имя {short_url} уже занято!', 'validation')
+        flash('Имя py уже занято!', 'validation')
         return render_template('index_short_url.html', form=form)
     short_url = URL_map.get_unique_short_id() if not short_url else short_url
     url_map = URL_map(original=form.original.data, short=short_url)
