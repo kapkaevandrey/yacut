@@ -25,13 +25,13 @@ class URL_map(db.Model):
         if 'max' in rules and len(short_id) > MAX_LENGTH_SHORT_URL:
             if exception:
                 raise InvalidAPIUsageError(
-                    f'Указано недопустимое имя для короткой ссылки'
+                    'Указано недопустимое имя для короткой ссылки'
                 )
             return False
         if 're' in rules and not LINK_MATCHING_PATTERN.match(short_id):
             if exception:
                 raise InvalidAPIUsageError(
-                    f'Указано недопустимое имя для короткой ссылки'
+                    'Указано недопустимое имя для короткой ссылки'
                 )
             return False
         if 'in' in rules and cls.query.filter_by(short=short_id).first() is not None:
@@ -42,9 +42,7 @@ class URL_map(db.Model):
 
     @classmethod
     def get_unique_short_id(cls):
-        short_link = ''.join(
-                random.choices(LINK_SYMBOLS, k=DEFAULT_LENGTH)
-            )
+        short_link = ''.join(random.choices(LINK_SYMBOLS, k=DEFAULT_LENGTH))
         while not cls.is_valid_short_id(short_link, 'in'):
             short_link = ''.join(
                 random.choices(LINK_SYMBOLS, k=DEFAULT_LENGTH)
