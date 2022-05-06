@@ -14,7 +14,7 @@ def index_view():
         return render_template('index_short_url.html', form=form)
     short_url = form.custom_id.data
 
-    if URL_map.query.filter_by(short=short_url).first() is not None: # Метод в модели
+    if URL_map.query.filter_by(short=short_url).first() is not None: #TODO Метод в модели
         flash(f'Имя {short_url} уже занято!', 'validation')
         return render_template('index_short_url.html', form=form)
 
