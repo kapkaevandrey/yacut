@@ -130,3 +130,7 @@ dmypy.json
 .pyre/
 
 .vscode
+
+# Static
+yacut/static/css/
+yacut/static/js/
