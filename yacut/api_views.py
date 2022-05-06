@@ -1,13 +1,10 @@
+from http import HTTPStatus
+
 from flask import jsonify, request, url_for
 
 from . import app, db
 from .error_handlers import InvalidAPIUsageError
 from .models import URL_map
-
-
-@app.route('/api/id', methods=['POST'])
-def create_short_link():
-    return
 
 
 @app.route('/api/id/<string:short_id>/', methods=['GET'])
@@ -44,4 +41,4 @@ def add_short_link():
              custom_id=url_map.short,
              _external=True
          )}
-    ), 201
+    ), HTTPStatus.CREATED
