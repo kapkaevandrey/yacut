@@ -28,13 +28,13 @@ class URL_map(db.Model):
         if 'max' in rules and len(short_id) > MAX_LENGTH_SHORT_PATH:
             if exception:
                 raise InvalidAPIUsageError(
-                    f'Указано недопустимое имя для короткой ссылки'
+                    'Указано недопустимое имя для короткой ссылки'
                 )
             return False
         if 're' in rules and not PATH_MATCHING_PATTERN.match(short_id):
             if exception:
                 raise InvalidAPIUsageError(
-                    f'Указано недопустимое имя для короткой ссылки'
+                    'Указано недопустимое имя для короткой ссылки'
                 )
             return False
         if ('in' in rules and
