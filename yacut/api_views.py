@@ -5,11 +5,6 @@ from .error_handlers import InvalidAPIUsageError
 from .models import URL_map
 
 
-@app.route('/api/id', methods=['POST'])
-def create_short_link():
-    return
-
-
 @app.route('/api/id/<string:short_id>/', methods=['GET'])
 def get_origin_url(short_id):
     url_map = URL_map.query.filter_by(short=short_id).first()
@@ -26,7 +21,9 @@ def add_short_link():
     if 'url' not in data:
         raise InvalidAPIUsageError('"url" является обязательным полем!')
     if 'custom_id' in data and data['custom_id']:
-        is_valid, message = URL_map.is_valid_short_id(data['custom_id'])
+        is_valid, message = URL_map.is_valid_short_id(
+            data['custom_id'], "max re in"
+        )
         if not is_valid:
             raise InvalidAPIUsageError(
                 message
