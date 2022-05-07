@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from flask import abort, flash, redirect, render_template
 
-from . import app, db
+from . import app
 from .forms import UrlMapForm
 from .models import URL_map
 

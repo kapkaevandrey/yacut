@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from flask import jsonify, request, url_for
 
-from . import app, db
+from . import app
 from .error_handlers import InvalidAPIUsageError
 from .models import URL_map
 
@@ -12,7 +12,7 @@ def get_origin_url(short_id):
     url_map = URL_map.query.filter_by(short=short_id).first()
     if url_map is None:
         raise InvalidAPIUsageError(
-            f'Указанный id не найден', HTTPStatus.NOT_FOUND
+            'Указанный id не найден', HTTPStatus.NOT_FOUND
         )
     return jsonify({'url': url_map.original}), HTTPStatus.OK
 
