@@ -12,7 +12,7 @@ def get_origin_url(short_id):
     url_map = URL_map.query.filter_by(short=short_id).first()
     if url_map is None:
         raise InvalidAPIUsageError(
-            'Указанный id не найден', HTTPStatus.NOT_FOUND
+            f'Указанный id не найден', HTTPStatus.NOT_FOUND
         )
     return jsonify({'url': url_map.original}), HTTPStatus.OK
 
@@ -26,12 +26,7 @@ def add_short_link():
         raise InvalidAPIUsageError('"url" является обязательным полем!')
     if 'custom_id' in data and data['custom_id']:
         URL_map.is_valid_short_id(data['custom_id'], exception=True)
-    else:
-        data['custom_id'] = URL_map.get_unique_short_id()
-    url_map = URL_map()
-    url_map.from_dict(data)
-    db.session.add(url_map)
-    db.session.commit()
+    url_map = URL_map.create_and_commit(original=data['url'], short=data.get('custom_id'))
     return jsonify(
         {'url': url_map.original,
          'short_link': url_for(

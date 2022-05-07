@@ -16,8 +16,8 @@ class URL_map(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.now())
 
     def from_dict(self, data):
-        self.original = data['url']
-        self.short = data['custom_id']
+        self.original = data['original']
+        self.short = data['short']
 
     @classmethod
     def is_valid_short_id(
@@ -46,11 +46,19 @@ class URL_map(db.Model):
 
     @classmethod
     def get_unique_short_id(cls):
-        short_link = ''.join(
-            random.choices(PATH_SYMBOLS, k=DEFAULT_LENGTH_SHORT_PATH)
-        )
+        short_link = '0' * DEFAULT_LENGTH_SHORT_PATH
         while not URL_map.is_valid_short_id(short_link, "in"):
             short_link = ''.join(
                 random.choices(PATH_SYMBOLS, k=DEFAULT_LENGTH_SHORT_PATH)
             )
         return short_link
+
+    @classmethod
+    def create_and_commit(cls, **data):
+        if not data['short']:
+            data['short'] = URL_map.get_unique_short_id()
+        url_map = URL_map()
+        url_map.from_dict(data)
+        db.session.add(url_map)
+        db.session.commit()
+        return url_map
