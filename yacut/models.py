@@ -2,7 +2,7 @@ import random
 from datetime import datetime
 
 from settings import (
-    DEFAULT_LENGTH_SHORT_PATH, PATH_MATCHING_PATTERN,
+    DEFAULT_LENGTH_SHORT_PATH, GENERATION_ATTEMPTS, PATH_MATCHING_PATTERN,
     PATH_SYMBOLS, MAX_LENGTH_SHORT_PATH, MAX_LENGTH_URL
 )
 from . import db
@@ -46,12 +46,15 @@ class URL_map(db.Model):
 
     @classmethod
     def get_unique_short_id(cls):
-        short_link = '0' * DEFAULT_LENGTH_SHORT_PATH
-        while not URL_map.is_valid_short_id(short_link, "in"):
+        counter = 0
+        while counter <= GENERATION_ATTEMPTS:
             short_link = ''.join(
                 random.choices(PATH_SYMBOLS, k=DEFAULT_LENGTH_SHORT_PATH)
             )
-        return short_link
+            if URL_map.is_valid_short_id(short_link, "in"):
+                return short_link
+            counter += 1
+        raise ValueError("Не удалось сгенерировать ссылку")
 
     @classmethod
     def create_and_commit(cls, **data):

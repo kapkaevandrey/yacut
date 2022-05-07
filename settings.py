@@ -2,13 +2,18 @@ import os
 import re
 import string
 
+
 DEFAULT_LENGTH_SHORT_PATH = 6
 PATH_SYMBOLS = (string.ascii_uppercase +
                 string.ascii_lowercase +
                 string.digits)
-PATH_MATCHING_PATTERN = re.compile(rf'^[{PATH_SYMBOLS}]+$')
+PATH_MATCHING_PATTERN = re.compile(fr'^[{re.escape(PATH_SYMBOLS)}]+$')
+print(PATH_MATCHING_PATTERN)
 MAX_LENGTH_SHORT_PATH = 16
 MAX_LENGTH_URL = 2048
+GENERATION_ATTEMPTS = int(
+    len(PATH_SYMBOLS) ** DEFAULT_LENGTH_SHORT_PATH * 0.0001
+)
 
 
 class Config:
