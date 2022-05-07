@@ -7,8 +7,7 @@ DEFAULT_LENGTH_SHORT_PATH = 6
 PATH_SYMBOLS = (string.ascii_uppercase +
                 string.ascii_lowercase +
                 string.digits)
-PATH_MATCHING_PATTERN = re.compile(fr'^[{re.escape(PATH_SYMBOLS)}]+$')
-print(PATH_MATCHING_PATTERN)
+PATH_MATCHING_PATTERN = re.compile(f'^[{re.escape(PATH_SYMBOLS)}]+$')
 MAX_LENGTH_SHORT_PATH = 16
 MAX_LENGTH_URL = 2048
 GENERATION_ATTEMPTS = int(

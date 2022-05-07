@@ -4,6 +4,7 @@ from wtforms.validators import URL, DataRequired, Length, Optional, Regexp
 
 from settings import (
     MAX_LENGTH_SHORT_PATH, MAX_LENGTH_URL, PATH_MATCHING_PATTERN,
+    PATH_SYMBOLS,
 )
 
 
@@ -22,8 +23,8 @@ class UrlMapForm(FlaskForm):
             Length(1, MAX_LENGTH_SHORT_PATH, 'Недопустимая длинна URL'),
             Regexp(
                 PATH_MATCHING_PATTERN,
-                message='Ссылка должна содержать только цифры и'
-                        'символы латинского алфавита'
+                message=f'Ссылка должна содержать только символы '
+                        f'{PATH_SYMBOLS}'
             ),
             Optional()
         ]

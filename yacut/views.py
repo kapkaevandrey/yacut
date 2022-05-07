@@ -12,13 +12,13 @@ def index_view():
     form = UrlMapForm()
     if not form.validate_on_submit():
         return render_template('index_short_url.html', form=form)
-    short_url = form.custom_id.data
-    if not URL_map.is_valid_short_id(short_url, "in"):
-        flash(f'Имя {short_url} уже занято!', 'validation')
+    custom_id = form.custom_id.data
+    if not URL_map.is_valid_short(custom_id, "in"):
+        flash(f'Имя {custom_id} уже занято!', 'validation')
         return render_template('index_short_url.html', form=form)
-    url_map = URL_map.create_and_commit(
+    url_map = URL_map.create(
         original=form.original_link.data,
-        short=short_url
+        short=custom_id
     )
     return render_template('index_short_url.html', form=form, url_map=url_map)
 
